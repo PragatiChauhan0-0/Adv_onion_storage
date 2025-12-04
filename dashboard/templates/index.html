@@ -73,10 +73,7 @@
                         <option value="es" data-translate-key="language_es">🌐 Language: Spanish</option>
                     </select>
                 </div>
-                <!-- Menu Button -->
-                <button class="text-gray-600 hover:text-primary-orange p-2 rounded-lg transition duration-150 ease-in-out">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
+
             </div>
         </div>
     </header>
@@ -209,15 +206,12 @@
     <!-- Footer -->
     <footer class="bg-bg-dark text-white p-4 mt-8">
         <div class="max-w-7xl mx-auto flex justify-between items-center text-sm">
-            <p data-translate-key="footer_copyright">&copy; 2024 Onion Warehouse Management</p>
+            <p data-translate-key="footer_copyright">&copy; 2025 Smart Onion Storage System</p>
             <div>
-                <a href="#about-team" class="text-primary-orange hover:text-orange-300 font-semibold transition duration-150 ease-in-out" data-translate-key="footer_by_team">
-                    By Team Soteria
+                <a href="{{ url_for ('about') }}" class="text-primary-orange hover:text-orange-300 font-semibold transition duration-150 ease-in-out" data-translate-key="footer_by_team">
+                    By Soteria
                 </a>
                 <span class="mx-2 text-gray-500">|</span>
-                <a href="#" class="text-gray-400 hover:text-white transition duration-150 ease-in-out" data-translate-key="footer_about">
-                    About
-                </a>
             </div>
         </div>
     </footer>
