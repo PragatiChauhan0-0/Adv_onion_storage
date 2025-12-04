@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Advanced Onion Warehouse Management</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Chart.js for dynamic graphs -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <!-- Configure Tailwind to use the Inter font and a custom accent color -->
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -17,7 +17,7 @@
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'primary-orange': '#F97316', // Light Orange accent color from sketch
+                        'primary-orange': '#F97316',
                         'alert-red': '#EF4444',
                         'warning-yellow': '#FBBF24',
                         'ideal-green': '#10B981',
@@ -32,45 +32,55 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
         }
-        /* Custom scrollbar for better look */
+
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #e2e8f0;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #94A3B8;
             border-radius: 4px;
         }
+
+        /* TTS button */
+        #tts-btn {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.15s ease-in-out;
+        }
+
+        #tts-btn:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
-    <!-- Header / Top Bar: Retained Max-Width for cleaner navigation -->
+    <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-10">
-        <!-- This div keeps the header content centered and readable -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-            <!-- Title and Status Bar -->
             <div class="flex items-center space-x-4">
                 <h1 class="text-2xl font-extrabold text-gray-900" id="app-title-container">
-                    <span id="app-title" data-translate-key="app_title">Onion</span> <span class="text-primary-orange" data-translate-key="warehouse_title">Warehouses</span>
+                    <span id="app-title" data-translate-key="app_title">Onion</span>
+                    <span class="text-primary-orange" data-translate-key="warehouse_title">Warehouses</span>
                 </h1>
-                <!-- Overall Status Indicator -->
                 <div id="overall-status-bar" class="flex items-center p-2 rounded-full text-xs font-semibold">
                     <div id="status-dot" class="w-2 h-2 rounded-full mr-2"></div>
-                    <span id="status-text" data-translate-key="status_operational">Operational</span>
+                    <span id="status-text" data-translate-key="loading_data">Loading data...</span>
                 </div>
             </div>
 
-            <!-- Language and Menu -->
             <div class="flex items-center space-x-4">
-                <!-- Language Dropdown -->
                 <div class="relative">
-                    <select id="language-select" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm transition duration-150 ease-in-out cursor-pointer focus:ring-2 focus:ring-primary-orange">
+                    <select id="language-select"
+                        class="bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm transition duration-150 ease-in-out cursor-pointer focus:ring-2 focus:ring-primary-orange">
                         <option value="en" data-translate-key="language_en">🌐 Language: English</option>
                         <option value="hi" data-translate-key="language_hi">🌐 Language: Hindi</option>
-                        <option value="es" data-translate-key="language_es">🌐 Language: Spanish</option>
                     </select>
                 </div>
 
@@ -78,128 +88,233 @@
         </div>
     </header>
 
-    <!-- Main Content Area: Now spans full width (w-full) for the "full window screen" effect -->
+    <!-- Main Content -->
     <main class="flex-grow w-full px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Main Grid: 60% (3 columns) / 40% (2 columns) -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            
-            <!-- Left Columns (60% - col-span-3): Paired Status & Graphs (Vertical Stack) -->
             <div class="lg:col-span-3 space-y-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4" id="monitoring-header" data-translate-key="monitoring_header">Real-time Monitoring & Trends</h2>
-                
-                <!-- Group 1: Temperature Status and Graph -->
+                <h2 class="text-2xl font-bold text-gray-800 mb-4" id="monitoring-header"
+                    data-translate-key="monitoring_header">Real-time Monitoring & Trends</h2>
+
+                <!-- Temperature -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <!-- Temp Tile (Condensed View) -->
-                    <div id="temp-card" class="status-card p-4 rounded-xl shadow-inner transition duration-300 mb-4">
-                        <h3 class="text-md font-semibold text-gray-700 mb-1" id="temp-status-header" data-translate-key="temp_status_header">Temperature Status</h3>
-                        <div class="flex justify-between items-center">
-                            <p id="temp-value" class="text-4xl font-extrabold text-gray-900">-- °C</p>
-                            <p id="temp-alert" class="text-sm font-medium transition-all text-right" data-translate-key="loading_data">Loading data...</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <div class="lg:col-span-2">
+                            <div id="temp-card" class="status-card p-4 rounded-xl shadow-inner transition duration-300">
+                                <h3 class="text-md font-semibold text-gray-700 mb-1" id="temp-status-header"
+                                    data-translate-key="temp_status_header">Temperature Status</h3>
+                                <div class="flex justify-between items-center">
+                                    <p id="temp-value" class="text-4xl font-extrabold text-gray-900">-- °C</p>
+                                    <p id="temp-alert" class="text-sm font-medium transition-all text-right"
+                                        data-translate-key="loading_data">Loading data...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <h3 class="font-bold mb-2 text-gray-800" id="temp-trend-header"
+                                data-translate-key="temp_trend_header">Temperature Trend (°C)</h3>
+                            <canvas id="tempChart"></canvas>
                         </div>
                     </div>
-                    <!-- Temp Graph -->
-                    <h3 class="font-bold mb-2 text-gray-800 border-t pt-4 mt-4" id="temp-trend-header" data-translate-key="temp_trend_header">Temperature Trend (°C)</h3>
-                    <canvas id="tempChart"></canvas>
                 </div>
 
-                <!-- Group 2: Humidity Status and Graph -->
+                <!-- Humidity -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <!-- Humidity Tile (Condensed View) -->
-                    <div id="humid-card" class="status-card p-4 rounded-xl shadow-inner transition duration-300 mb-4">
-                        <h3 class="text-md font-semibold text-gray-700 mb-1" id="humid-status-header" data-translate-key="humid_status_header">Humidity Status</h3>
-                        <div class="flex justify-between items-center">
-                            <p id="humid-value" class="text-4xl font-extrabold text-gray-900">-- %</p>
-                            <p id="humid-alert" class="text-sm font-medium transition-all text-right" data-translate-key="loading_data">Loading data...</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <div class="lg:col-span-2">
+                            <div id="humid-card"
+                                class="status-card p-4 rounded-xl shadow-inner transition duration-300">
+                                <h3 class="text-md font-semibold text-gray-700 mb-1" id="humid-status-header"
+                                    data-translate-key="humid_status_header">Humidity Status</h3>
+                                <div class="flex justify-between items-center">
+                                    <p id="humid-value" class="text-4xl font-extrabold text-gray-900">-- %</p>
+                                    <p id="humid-alert" class="text-sm font-medium transition-all text-right"
+                                        data-translate-key="loading_data">Loading data...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <h3 class="font-bold mb-2 text-gray-800" id="humid-trend-header"
+                                data-translate-key="humid_trend_header">Humidity Trend (%)</h3>
+                            <canvas id="humidChart"></canvas>
                         </div>
                     </div>
-                    <!-- Humidity Graph -->
-                    <h3 class="font-bold mb-2 text-gray-800 border-t pt-4 mt-4" id="humid-trend-header" data-translate-key="humid_trend_header">Humidity Trend (%)</h3>
-                    <canvas id="humidChart"></canvas>
                 </div>
 
-                <!-- Group 3: Air Quality Status and Graph -->
+                <!-- Air Quality -->
                 <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <!-- Air Quality Tile (Condensed View) -->
-                    <div id="airq-card" class="status-card p-4 rounded-xl shadow-inner transition duration-300 mb-4">
-                        <h3 class="text-md font-semibold text-gray-700 mb-1" id="airq-status-header" data-translate-key="airq_status_header">Air Quality Status</h3>
-                        <div class="flex justify-between items-center">
-                            <p id="airq-value" class="text-4xl font-extrabold text-gray-900">-- PPM</p>
-                            <p id="airq-alert" class="text-sm font-medium transition-all text-right" data-translate-key="loading_data">Loading data...</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <div class="lg:col-span-2">
+                            <div id="airq-card" class="status-card p-4 rounded-xl shadow-inner transition duration-300">
+                                <h3 class="text-md font-semibold text-gray-700 mb-1" id="airq-status-header"
+                                    data-translate-key="airq_status_header">Air Quality Status</h3>
+                                <div class="flex justify-between items-center">
+                                    <p id="airq-value" class="text-4xl font-extrabold text-gray-900">-- PPM</p>
+                                    <p id="airq-alert" class="text-sm font-medium transition-all text-right"
+                                        data-translate-key="loading_data">Loading data...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <h3 class="font-bold mb-2 text-gray-800" id="airq-trend-header"
+                                data-translate-key="airq_trend_header">Air Quality Trend (PPM)</h3>
+                            <canvas id="airqChart"></canvas>
                         </div>
                     </div>
-                    <!-- Air Quality Graph -->
-                    <h3 class="font-bold mb-2 text-gray-800 border-t pt-4 mt-4" id="airq-trend-header" data-translate-key="airq_trend_header">Air Quality Trend (PPM)</h3>
-                    <canvas id="airqChart"></canvas>
                 </div>
-
             </div>
 
-            <!-- Right Column (40% - col-span-2): Actuator Controls Panel & LLM Analysis -->
+            <!-- Right Column -->
             <div class="lg:col-span-2 space-y-8">
-                
+
                 <!-- Actuator Control Panel -->
                 <section>
-                    <h2 class="text-2xl font-bold mb-4 text-primary-orange" id="actuator-header" data-translate-key="actuator_header">Actuator Control Panel</h2>
-                    
-                    <!-- Horizontal Actuator Layout (3 panels side-by-side) -->
-                    <div class="bg-white p-4 rounded-xl shadow-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-                        
-                        <!-- Actuator 1: Ventilation Fan -->
-                        <div class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
-                            <h3 class="font-semibold text-gray-800 mb-2" id="fan-label" data-translate-key="fan_label">Ventilation Fan</h3>
-                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span> <span id="fan-status">OFF</span></p>
-                            <button id="fan-btn" onclick="toggleActuator('fan', 'fan-status', this)" class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full" data-translate-key="button_on">
+                    <h2 class="text-2xl font-bold mb-4 text-primary-orange" id="actuator-header"
+                        data-translate-key="actuator_header">Actuator Control Panel</h2>
+
+                    <div
+                        class="bg-white p-4 rounded-xl shadow-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+
+                        <!-- Ventilation Fan -->
+                        <div
+                            class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
+                            <h3 class="font-semibold text-gray-800 mb-2" id="fan-label" data-translate-key="fan_label">
+                                Ventilation Fan</h3>
+                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span>
+                                <span id="fan-status">OFF</span>
+                            </p>
+                            <button id="fan-btn" onclick="toggleActuator('fan', 'fan-status', this)"
+                                class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full"
+                                data-translate-key="button_on">
                                 ON
                             </button>
                         </div>
-                        
-                        <!-- Actuator 2: Climate Control Unit -->
-                        <div class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
-                            <h3 class="font-semibold text-gray-800 mb-2" id="climate-label" data-translate-key="climate_label">Climate Control Unit</h3>
-                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span> <span id="climate-status">Idle</span></p>
-                            <button id="climate-btn" onclick="toggleActuator('climate', 'climate-status', this)" class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full" data-translate-key="button_activate">
+
+                        <!-- Climate Control -->
+                        <div
+                            class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
+                            <h3 class="font-semibold text-gray-800 mb-2" id="climate-label"
+                                data-translate-key="climate_label">Climate Control Unit</h3>
+                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span>
+                                <span id="climate-status">Idle</span>
+                            </p>
+                            <button id="climate-btn" onclick="toggleActuator('climate', 'climate-status', this)"
+                                class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full"
+                                data-translate-key="button_activate">
                                 ACTIVATE
                             </button>
                         </div>
 
-                        <!-- Actuator 3: Sprinkler System (Updated from Dehumidifier) -->
-                        <div class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
-                            <h3 class="font-semibold text-gray-800 mb-2" id="sprinkler-label" data-translate-key="sprinkler_label">Sprinkler System</h3>
-                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span> <span id="sprinkler-status">OFF</span></p>
-                            <button id="sprinkler-btn" onclick="toggleActuator('sprinkler', 'sprinkler-status', this)" class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full" data-translate-key="button_on">
+                        <!-- Sprinkler -->
+                        <div
+                            class="p-4 rounded-xl border border-gray-100 flex flex-col items-center text-center shadow-sm hover:shadow-md transition duration-200">
+                            <h3 class="font-semibold text-gray-800 mb-2" id="sprinkler-label"
+                                data-translate-key="sprinkler_label">Sprinkler System</h3>
+                            <p class="text-sm text-gray-500 mb-4"><span data-translate-key="status_label">Status:</span>
+                                <span id="sprinkler-status">OFF</span>
+                            </p>
+                            <button id="sprinkler-btn" onclick="toggleActuator('sprinkler', 'sprinkler-status', this)"
+                                class="actuator-btn bg-primary-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out transform hover:scale-105 w-full"
+                                data-translate-key="button_on">
                                 ON
                             </button>
                         </div>
                     </div>
                 </section>
 
-                <!-- LLM Feature: Intelligent Action Recommendation -->
+                <!-- Intelligent Analysis & TTS -->
                 <section class="mt-8">
-                    <h2 class="text-2xl font-bold mb-4 text-gray-800" id="analysis-header" data-translate-key="analysis_header">Intelligent Analysis</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800" id="analysis-header"
+                        data-translate-key="analysis_header">Intelligent Analysis</h2>
                     <div class="bg-white p-6 rounded-xl shadow-2xl border border-blue-200">
                         <h3 class="font-semibold text-lg mb-4 text-gray-700 flex items-center space-x-2">
-                            <span class="text-xl">✨</span> <span id="recommendation-title" data-translate-key="recommendation_title">Optimal Action Recommendation</span>
+                            <span class="text-xl">✨</span> <span id="recommendation-title"
+                                data-translate-key="recommendation_title">Optimal Action Recommendation</span>
                         </h3>
-                        <button id="recommendation-btn" onclick="getRecommendation()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-[1.01]" data-translate-key="recommendation_btn_analyze">
+
+                        <button id="recommendation-btn" onclick="getRecommendation()"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-[1.01]"
+                            data-translate-key="recommendation_btn_analyze">
                             Analyze Current Conditions & Recommend Fix
                         </button>
 
-                        <div id="recommendation-output" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px] text-gray-600 text-sm whitespace-pre-wrap" data-translate-key="recommendation_initial_text">
-                            Click the button above to receive a risk assessment and a 3-step actuator action plan based on the latest sensor data.
+                        <div class="mt-4 space-y-2">
+                            <div id="recommendation-output"
+                                class="p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px] text-gray-600 text-sm whitespace-pre-wrap"
+                                data-translate-key="recommendation_initial_text">
+                                Click the button above to receive a risk assessment and a 3-step actuator action plan
+                                based on the latest sensor data.
+                            </div>
+
+                            <button id="tts-btn" onclick="speakRecommendation()" disabled
+                                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.536 8.464A.95.95 0 0116 9v6a1 1 0 01-1.071.996C13.886 16.035 12 17 12 17H5a2 2 0 01-2-2V9a2 2 0 012-2h7c0 0 1.886-.965 2.929-1.004A.95.95 0 0116 8.464zM20 10v4M23 7v10">
+                                    </path>
+                                </svg>
+                                <span data-translate-key="tts_listen">✨ Listen to Alert (TTS)</span>
+                            </button>
                         </div>
 
-                        <!-- Loading indicator -->
-                        <div id="loading-indicator" class="hidden mt-4 text-center text-blue-600 font-semibold flex items-center justify-center space-x-2">
-                            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <div id="loading-indicator"
+                            class="hidden mt-4 text-center text-blue-600 font-semibold flex items-center justify-center space-x-2">
+                            <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
                             </svg>
                             <span data-translate-key="loading_text">Analyzing with Gemini... Please wait.</span>
                         </div>
                     </div>
                 </section>
-            </div>
 
+                <!-- Predictive Condition Simulator -->
+                <section class="mt-8">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-800" id="simulator-header"
+                        data-translate-key="simulator_header">Predictive Condition Simulator</h2>
+                    <div class="bg-white p-6 rounded-xl shadow-2xl border border-primary-orange/50">
+                        <h3 class="font-semibold text-lg mb-4 text-gray-700 flex items-center space-x-2">
+                            <span class="text-xl">✨</span> <span id="simulator-title"
+                                data-translate-key="simulator_title">Run a "What If" Scenario</span>
+                        </h3>
+
+                        <textarea id="simulation-input" rows="3"
+                            placeholder="e.g., Temperature rises to 25°C and Humidity drops to 50% for 48 hours."
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-orange focus:border-primary-orange mb-3"></textarea>
+
+                        <button id="simulator-btn" onclick="runConditionSimulation()"
+                            class="w-full bg-primary-orange hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-[1.01]"
+                            data-translate-key="simulator_btn_run">
+                            Simulate & Forecast Damage
+                        </button>
+
+                        <div id="simulation-output"
+                            class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-[100px] text-gray-600 text-sm whitespace-pre-wrap"
+                            data-translate-key="simulator_initial_text">
+                            Enter a hypothetical scenario (e.g., sensor malfunction, outside heatwave) to analyze the
+                            impact on your onion storage.
+                        </div>
+
+                        <div id="simulator-loading"
+                            class="hidden mt-4 text-center text-primary-orange font-semibold flex items-center justify-center space-x-2">
+                            <svg class="animate-spin h-5 w-5 text-primary-orange" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <span data-translate-key="loading_text_simulator">Running Predictive Model...</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
         </div>
     </main>
 
@@ -216,162 +331,194 @@
         </div>
     </footer>
 
-
     <script type="module">
         // --- Firebase/Authentication Setup (MANDATORY STRUCTURE) ---
         // These variables are provided by the canvas environment.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
+
         let db = null;
         let auth = null;
-        let userId = 'mock-user-id'; // Use mock ID for simplicity
+        let userId = 'mock-user-id';
         let currentLanguage = 'en';
 
-        // --- Translation Data ---
+        // --- Translation Data (EN + HI only, Spanish removed) ---
         const TEXT_KEYS = {
             // Header & Status
-            'app_title': { 'en': 'Onion', 'hi': 'प्याज', 'es': 'Cebolla' },
-            'warehouse_title': { 'en': 'Warehouses', 'hi': 'भंडार गृह', 'es': 'Almacenes' },
-            'status_operational': { 'en': 'Operational', 'hi': 'कार्यशील', 'es': 'Operativo' },
-            'status_warning': { 'en': 'Warning Status', 'hi': 'चेतावनी स्थिति', 'es': 'Estado de Advertencia' },
-            'status_critical': { 'en': 'CRITICAL ALERT', 'hi': 'अति महत्वपूर्ण चेतावनी', 'es': 'ALERTA CRÍTICA' },
-            'language_en': { 'en': '🌐 Language: English', 'hi': '🌐 भाषा: अंग्रेजी', 'es': '🌐 Idioma: Inglés' },
-            'language_hi': { 'en': '🌐 Language: Hindi', 'hi': '🌐 भाषा: हिंदी', 'es': '🌐 Idioma: Hindi' },
-            'language_es': { 'en': '🌐 Language: Spanish', 'hi': '🌐 भाषा: स्पैनिश', 'es': '🌐 Idioma: Español' },
+            'app_title': { 'en': 'Onion', 'hi': 'प्याज' },
+            'warehouse_title': { 'en': 'Warehouses', 'hi': 'भंडार गृह' },
+            'status_operational': { 'en': 'Operational', 'hi': 'कार्यशील' },
+            'status_warning': { 'en': 'Warning Status', 'hi': 'चेतावनी स्थिति' },
+            'status_critical': { 'en': 'CRITICAL ALERT', 'hi': 'अति महत्वपूर्ण चेतावनी' },
+            'language_en': { 'en': '🌐 Language: English', 'hi': '🌐 भाषा: अंग्रेजी' },
+            'language_hi': { 'en': '🌐 Language: Hindi', 'hi': '🌐 भाषा: हिंदी' },
 
             // Monitoring
-            'monitoring_header': { 'en': 'Real-time Monitoring & Trends', 'hi': 'रीयल-टाइम निगरानी और रुझान', 'es': 'Monitoreo y Tendencias en Tiempo Real' },
-            'loading_data': { 'en': 'Loading data...', 'hi': 'डेटा लोड हो रहा है...', 'es': 'Cargando datos...' },
-            'temp_status_header': { 'en': 'Temperature Status', 'hi': 'तापमान स्थिति', 'es': 'Estado de Temperatura' },
-            'humid_status_header': { 'en': 'Humidity Status', 'hi': 'आर्द्रता स्थिति', 'es': 'Estado de Humedad' },
-            'airq_status_header': { 'en': 'Air Quality Status', 'hi': 'वायु गुणवत्ता स्थिति', 'es': 'Estado de Calidad del Aire' },
-            'temp_trend_header': { 'en': 'Temperature Trend (°C)', 'hi': 'तापमान रुझान (°C)', 'es': 'Tendencia de Temperatura (°C)' },
-            'humid_trend_header': { 'en': 'Humidity Trend (%)', 'hi': 'आर्द्रता रुझान (%)', 'es': 'Tendencia de Humedad (%)' },
-            'airq_trend_header': { 'en': 'Air Quality Trend (PPM)', 'hi': 'वायु गुणवत्ता रुझान (PPM)', 'es': 'Tendencia de Calidad del Aire (PPM)' },
+            'monitoring_header': { 'en': 'Real-time Monitoring & Trends', 'hi': 'रीयल-टाइम निगरानी और रुझान' },
+            'loading_data': { 'en': 'Loading data...', 'hi': 'डेटा लोड हो रहा है...' },
+            'temp_status_header': { 'en': 'Temperature Status', 'hi': 'तापमान स्थिति' },
+            'humid_status_header': { 'en': 'Humidity Status', 'hi': 'आर्द्रता स्थिति' },
+            'airq_status_header': { 'en': 'Air Quality Status', 'hi': 'वायु गुणवत्ता स्थिति' },
+            'temp_trend_header': { 'en': 'Temperature Trend (°C)', 'hi': 'तापमान रुझान (°C)' },
+            'humid_trend_header': { 'en': 'Humidity Trend (%)', 'hi': 'आर्द्रता रुझान (%)' },
+            'airq_trend_header': { 'en': 'Air Quality Trend (PPM)', 'hi': 'वायु गुणवत्ता रुझान (PPM)' },
 
-            // Status Messages (used in updateStatusTiles)
-            'status_ideal_stable': { 'en': 'IDEAL: Stable', 'hi': 'आदर्श: स्थिर', 'es': 'IDEAL: Estable' },
-            'status_near_limit': { 'en': 'WARNING: Near Limit', 'hi': 'चेतावनी: सीमा के पास', 'es': 'ADVERTENCIA: Cerca del Límite' },
-            'status_extreme_condition': { 'en': 'CRITICAL: Extreme Condition', 'hi': 'अति महत्वपूर्ण: चरम स्थिति', 'es': 'CRÍTICO: Condición Extrema' },
-            'status_elevated_levels': { 'en': 'WARNING: Elevated Levels', 'hi': 'चेतावनी: ऊंचे स्तर', 'es': 'ADVERTENCIA: Niveles Elevados' },
-            'status_high_contamination': { 'en': 'CRITICAL: High Contamination', 'hi': 'अति महत्वपूर्ण: उच्च प्रदूषण', 'es': 'CRÍTICO: Alta Contaminación' },
+            // Status Messages
+            'status_ideal_stable': { 'en': 'IDEAL: Stable', 'hi': 'आदर्श: स्थिर' },
+            'status_near_limit': { 'en': 'WARNING: Near Limit', 'hi': 'चेतावनी: सीमा के पास' },
+            'status_extreme_condition': { 'en': 'CRITICAL: Extreme Condition', 'hi': 'अति महत्वपूर्ण: चरम स्थिति' },
+            'status_elevated_levels': { 'en': 'WARNING: Elevated Levels', 'hi': 'चेतावनी: ऊंचे स्तर' },
+            'status_high_contamination': { 'en': 'CRITICAL: High Contamination', 'hi': 'अति महत्वपूर्ण: उच्च प्रदूषण' },
 
             // Actuators
-            'actuator_header': { 'en': 'Actuator Control Panel', 'hi': 'अभिकर्ता नियंत्रण पैनल', 'es': 'Panel de Control del Actuador' },
-            'status_label': { 'en': 'Status:', 'hi': 'स्थिति:', 'es': 'Estado:' },
-            'fan_label': { 'en': 'Ventilation Fan', 'hi': 'वेंटिलेशन पंखा', 'es': 'Ventilador de Ventilación' },
-            'climate_label': { 'en': 'Climate Control Unit', 'hi': 'जलवायु नियंत्रण इकाई', 'es': 'Unidad de Control Climático' },
-            'sprinkler_label': { 'en': 'Sprinkler System', 'hi': 'छिड़काव प्रणाली', 'es': 'Sistema de Rociadores' },
-            
+            'actuator_header': { 'en': 'Actuator Control Panel', 'hi': 'अभिकर्ता नियंत्रण पैनल' },
+            'status_label': { 'en': 'Status:', 'hi': 'स्थिति:' },
+            'fan_label': { 'en': 'Ventilation Fan', 'hi': 'वेंटिलेशन पंखा' },
+            'climate_label': { 'en': 'Climate Control Unit', 'hi': 'जलवायु नियंत्रण इकाई' },
+            'sprinkler_label': { 'en': 'Sprinkler System', 'hi': 'छिड़काव प्रणाली' },
+
             // Actuator Buttons
-            'button_on': { 'en': 'ON', 'hi': 'चालू', 'es': 'ENCENDER' },
-            'button_off': { 'en': 'OFF', 'hi': 'बंद', 'es': 'APAGAR' },
-            'button_activate': { 'en': 'ACTIVATE', 'hi': 'सक्रिय करें', 'es': 'ACTIVAR' },
-            'button_shutdown': { 'en': 'SHUTDOWN', 'hi': 'बंद करें', 'es': 'APAGAR' },
+            'button_on': { 'en': 'ON', 'hi': 'चालू' },
+            'button_off': { 'en': 'OFF', 'hi': 'बंद' },
+            'button_activate': { 'en': 'ACTIVATE', 'hi': 'सक्रिय करें' },
+            'button_shutdown': { 'en': 'SHUTDOWN', 'hi': 'बंद करें' },
 
-            // Actuator Status (for actuator status spans)
-            'status_active': { 'en': 'ACTIVE', 'hi': 'सक्रिय', 'es': 'ACTIVO' },
-            'status_spraying': { 'en': 'SPRAYING', 'hi': 'छिड़काव कर रहा है', 'es': 'ROCIANDO' },
-            'status_idle': { 'en': 'Idle', 'hi': 'निष्क्रिय', 'es': 'Inactivo' },
-            'status_off': { 'en': 'OFF', 'hi': 'बंद', 'es': 'APAGADO' },
-            'status_cooling': { 'en': 'Cooling (24/7)', 'hi': 'शीतलन (24/7)', 'es': 'Enfriando (24/7)' },
+            // Actuator Status
+            'status_active': { 'en': 'ACTIVE', 'hi': 'सक्रिय' },
+            'status_spraying': { 'en': 'SPRAYING', 'hi': 'छिड़काव कर रहा है' },
+            'status_idle': { 'en': 'Idle', 'hi': 'निष्क्रिय' },
+            'status_off': { 'en': 'OFF', 'hi': 'बंद' },
+            'status_cooling': { 'en': 'Cooling (24/7)', 'hi': 'शीतलन (24/7)' },
 
-            // Actuator Messages (used in showNotification)
-            'msg_fan_on': { 'en': 'Ventilation Fan turned ON.', 'hi': 'वेंटिलेशन पंखा चालू किया गया।', 'es': 'Ventilador de Ventilación encendido.' },
-            'msg_fan_off': { 'en': 'Ventilation Fan turned OFF.', 'hi': 'वेंटिलेशन पंखा बंद किया गया।', 'es': 'Ventilador de Ventilación apagado.' },
-            'msg_climate_on': { 'en': 'Climate Control Unit ACTIVATED.', 'hi': 'जलवायु नियंत्रण इकाई सक्रिय की गई।', 'es': 'Unidad de Control Climático ACTIVADA.' },
-            'msg_climate_off': { 'en': 'Climate Control Unit SHUT DOWN.', 'hi': 'जलवायु नियंत्रण इकाई बंद की गई।', 'es': 'Unidad de Control Climático APAGADA.' },
-            'msg_sprinkler_on': { 'en': 'Sprinkler System turned ON.', 'hi': 'छिड़काव प्रणाली चालू की गई।', 'es': 'Sistema de Rociadores encendido.' },
-            'msg_sprinkler_off': { 'en': 'Sprinkler System turned OFF.', 'hi': 'छिड़काव प्रणाली बंद की गई।', 'es': 'Sistema de Rociadores apagado.' },
+            // Actuator Messages
+            'msg_fan_on': { 'en': 'Ventilation Fan turned ON.', 'hi': 'वेंटिलेशन पंखा चालू किया गया।' },
+            'msg_fan_off': { 'en': 'Ventilation Fan turned OFF.', 'hi': 'वेंटिलेशन पंखा बंद किया गया।' },
+            'msg_climate_on': { 'en': 'Climate Control Unit ACTIVATED.', 'hi': 'जलवायु नियंत्रण इकाई सक्रिय की गई।' },
+            'msg_climate_off': { 'en': 'Climate Control Unit SHUT DOWN.', 'hi': 'जलवायु नियंत्रण इकाई बंद की गई।' },
+            'msg_sprinkler_on': { 'en': 'Sprinkler System turned ON.', 'hi': 'छिड़काव प्रणाली चालू की गई।' },
+            'msg_sprinkler_off': { 'en': 'Sprinkler System turned OFF.', 'hi': 'छिड़काव प्रणाली बंद की गई।' },
 
             // LLM Analysis
-            'analysis_header': { 'en': 'Intelligent Analysis', 'hi': 'बुद्धिमान विश्लेषण', 'es': 'Análisis Inteligente' },
-            'recommendation_title': { 'en': 'Optimal Action Recommendation', 'hi': 'इष्टतम कार्रवाई अनुशंसा', 'es': 'Recomendación de Acción Óptima' },
-            'recommendation_btn_analyze': { 'en': 'Analyze Current Conditions & Recommend Fix', 'hi': 'वर्तमान स्थितियों का विश्लेषण करें और समाधान सुझाएं', 'es': 'Analizar Condiciones Actuales y Recomendar Solución' },
-            'recommendation_btn_analyzing': { 'en': 'Analyzing...', 'hi': 'विश्लेषण हो रहा है...', 'es': 'Analizando...' },
-            'recommendation_initial_text': { 'en': 'Click the button above to receive a risk assessment and a 3-step actuator action plan based on the latest sensor data.', 'hi': 'नवीनतम सेंसर डेटा के आधार पर जोखिम मूल्यांकन और 3-चरणीय अभिकर्ता कार्रवाई योजना प्राप्त करने के लिए ऊपर दिए गए बटन पर क्लिक करें।', 'es': 'Haga clic en el botón de arriba para recibir una evaluación de riesgos y un plan de acción de 3 pasos basado en los últimos datos del sensor.' },
-            'loading_text': { 'en': 'Analyzing with Gemini... Please wait.', 'hi': 'जेमिनी के साथ विश्लेषण हो रहा है... कृपया प्रतीक्षा करें।', 'es': 'Analizando con Gemini... Por favor espere.' },
-            'running_simulation': { 'en': 'Running advanced simulation...', 'hi': 'उन्नत सिमुलेशन चल रहा है...', 'es': 'Ejecutando simulación avanzada...' },
+            'analysis_header': { 'en': 'Intelligent Analysis', 'hi': 'बुद्धिमान विश्लेषण' },
+            'recommendation_title': { 'en': 'Optimal Action Recommendation', 'hi': 'इष्टतम कार्रवाई अनुशंसा' },
+            'recommendation_btn_analyze': { 'en': 'Analyze Current Conditions & Recommend Fix', 'hi': 'वर्तमान स्थितियों का विश्लेषण करें और समाधान सुझाएं' },
+            'recommendation_btn_analyzing': { 'en': 'Analyzing...', 'hi': 'विश्लेषण हो रहा है...' },
+            'recommendation_initial_text': { 'en': 'Click the button above to receive a risk assessment and a 3-step actuator action plan based on the latest sensor data.', 'hi': 'नवीनतम सेंसर डेटा के आधार पर जोखिम मूल्यांकन और 3-चरणीय अभिकर्ता कार्रवाई योजना प्राप्त करने के लिए ऊपर दिए गए बटन पर क्लिक करें।' },
+            'loading_text': { 'en': 'Analyzing with Gemini... Please wait.', 'hi': 'जेमिनी के साथ विश्लेषण हो रहा है... कृपया प्रतीक्षा करें।' },
+            'running_simulation': { 'en': 'Running advanced simulation...', 'hi': 'उन्नत सिमुलेशन चल रहा है...' },
+
+            // TTS
+            'tts_listen': { 'en': '✨ Listen to Alert (TTS)', 'hi': '✨ अलर्ट सुनें (टीटीएस)' },
+            'tts_speaking': { 'en': 'Speaking...', 'hi': 'बोल रहा है...' },
+            'tts_error': { 'en': 'TTS Error. See console.', 'hi': 'टीटीएस त्रुटि। कंसोल देखें।' },
+
+            // Simulator
+            'simulator_header': { 'en': 'Predictive Condition Simulator', 'hi': 'पूर्वानुमानात्मक स्थिति सिम्युलेटर' },
+            'simulator_title': { 'en': 'Run a "What If" Scenario', 'hi': '"क्या होगा अगर" परिदृश्य चलाएँ' },
+            'simulator_btn_run': { 'en': 'Simulate & Forecast Damage', 'hi': 'क्षति का अनुकरण और पूर्वानुमान' },
+            'simulator_btn_simulating': { 'en': 'Simulating...', 'hi': 'अनुकरण हो रहा है...' },
+            'simulator_initial_text': { 'en': 'Enter a hypothetical scenario (e.g., sensor malfunction, outside heatwave) to analyze the impact on your onion storage.', 'hi': 'अपने प्याज भंडारण पर प्रभाव का विश्लेषण करने के लिए एक काल्पनिक परिदृश्य (जैसे, सेंसर खराबी, बाहरी लू) दर्ज करें।' },
+            'loading_text_simulator': { 'en': 'Running Predictive Model...', 'hi': 'पूर्वानुमानात्मक मॉडल चल रहा है...' },
 
             // Footer
-            'footer_copyright': { 'en': '© 2024 Onion Warehouse Management', 'hi': '© 2024 प्याज भंडार गृह प्रबंधन', 'es': '© 2024 Gestión de Almacenes de Cebolla' },
-            'footer_by_team': { 'en': 'By Team Soteria', 'hi': 'टीम सोटरिया द्वारा', 'es': 'Por Equipo Soteria' },
-            'footer_about': { 'en': 'About', 'hi': 'के बारे में', 'es': 'Acerca de' },
+            'footer_copyright': { 'en': '© 2024 Onion Warehouse Management', 'hi': '© 2024 प्याज भंडार गृह प्रबंधन' },
+            'footer_by_team': { 'en': 'By Team Soteria', 'hi': 'टीम सोटरिया द्वारा' },
+            'footer_about': { 'en': 'About', 'hi': 'के बारे में' },
         };
 
-        // Function to look up and return the translated string
+        // Translation helper
         function t(key) {
             return TEXT_KEYS[key] ? (TEXT_KEYS[key][currentLanguage] || TEXT_KEYS[key]['en']) : key;
         }
 
-        // --- Translation Logic ---
+        // Translation logic
         function translatePage(lang) {
             currentLanguage = lang;
-            
-            // 1. Translate all elements with data-translate-key
+
+            // Translate all elements with data-translate-key
             document.querySelectorAll('[data-translate-key]').forEach(element => {
                 const key = element.getAttribute('data-translate-key');
                 const translation = t(key);
 
-                if (element.tagName === 'OPTION') {
-                    // Handle language dropdown options
-                    element.textContent = translation;
-                } else {
-                    element.textContent = translation;
-                }
+                // For option elements and others — set textContent
+                element.textContent = translation;
             });
 
-            // 2. Special case: Actuator button labels need to be translated based on their current state (ON/OFF)
+            // Translate actuator buttons and status
             translateActuatorButtons();
-            
-            // 3. Update all dynamic status messages (to catch the current state)
-            updateStatusTiles(false); // Update with translated texts, don't run simulation
 
-            // 4. Update the document title
+            // Update dynamic tiles
+            updateStatusTiles(false);
+
+            // Update document title
             document.title = t('app_title') + ' ' + t('warehouse_title');
         }
-        
+
         function translateActuatorButtons() {
             // Fan Button
             const fanBtn = document.getElementById('fan-btn');
-            fanBtn.textContent = fanBtn.classList.contains('bg-gray-400') ? t('button_off') : t('button_on');
+            if (fanBtn) {
+                fanBtn.textContent = fanBtn.classList.contains('bg-gray-400') ? t('button_off') : t('button_on');
+            }
 
             // Climate Button
             const climateBtn = document.getElementById('climate-btn');
-            climateBtn.textContent = climateBtn.classList.contains('bg-red-500') ? t('button_shutdown') : t('button_activate');
+            if (climateBtn) {
+                climateBtn.textContent = climateBtn.classList.contains('bg-red-500') ? t('button_shutdown') : t('button_activate');
+            }
 
             // Sprinkler Button
             const sprinklerBtn = document.getElementById('sprinkler-btn');
-            sprinklerBtn.textContent = sprinklerBtn.classList.contains('bg-gray-400') ? t('button_off') : t('button_on');
+            if (sprinklerBtn) {
+                sprinklerBtn.textContent = sprinklerBtn.classList.contains('bg-gray-400') ? t('button_off') : t('button_on');
+            }
+
+            // TTS Button
+            const ttsBtn = document.getElementById('tts-btn');
+            if (ttsBtn) {
+                const ttsSpan = ttsBtn.querySelector('span');
+                if (ttsSpan) {
+                    ttsSpan.textContent = t('tts_listen');
+                }
+            }
         }
-        
+
+        // Initialize app and language selection
         function initializeAppAndAuth() {
-            // For a production app, you would initialize Firebase here.
-            // Since this is a frontend mock, we proceed with mock data/auth.
-            
-            // Set initial language from dropdown (default to 'en')
             const langSelect = document.getElementById('language-select');
             currentLanguage = langSelect.value;
             langSelect.addEventListener('change', (e) => translatePage(e.target.value));
 
-            // Initial translation and start dashboard
             translatePage(currentLanguage);
             startDashboard();
         }
-        
+
         // --- Gemini API Utilities ---
         const API_MODEL = 'gemini-2.5-flash-preview-09-2025';
+        const TTS_MODEL = 'gemini-2.5-flash-preview-tts';
         const API_KEY = ""; // Canvas provides this dynamically
 
-        async function geminiApiCall(userQuery, systemPrompt, maxRetries = 3) {
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${API_MODEL}:generateContent?key=${API_KEY}`;
+        async function geminiApiCall(model, userQuery, systemPrompt, maxRetries = 3, isTTS = false) {
+            const modelName = isTTS ? TTS_MODEL : model;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
+
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
                 systemInstruction: { parts: [{ text: systemPrompt }] },
             };
-            
+
+            if (isTTS) {
+                payload.generationConfig = {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Kore" }
+                        }
+                    }
+                };
+            }
+
             for (let i = 0; i < maxRetries; i++) {
                 try {
                     const response = await fetch(apiUrl, {
@@ -382,46 +529,161 @@
 
                     if (response.ok) {
                         const result = await response.json();
-                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text || 
-                                     "Error: Could not parse Gemini response.";
-                        return text;
+                        if (isTTS) {
+                            const part = result?.candidates?.[0]?.content?.parts?.[0];
+                            return {
+                                audioData: part?.inlineData?.data,
+                                mimeType: part?.inlineData?.mimeType
+                            };
+                        } else {
+                            const text = result.candidates?.[0]?.content?.parts?.[0]?.text ||
+                                "Error: Could not parse Gemini response.";
+                            return text;
+                        }
                     } else if (response.status === 429 && i < maxRetries - 1) {
-                        // Handle rate limiting with exponential backoff
                         const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
                         await new Promise(resolve => setTimeout(resolve, delay));
-                        continue; // Retry the request
+                        continue;
                     } else {
                         throw new Error(`API request failed with status: ${response.status}`);
                     }
                 } catch (error) {
                     if (i === maxRetries - 1) {
-                         console.error("Gemini API call failed after multiple retries:", error);
-                         return "An error occurred while contacting the analysis engine. Please try again.";
+                        console.error("Gemini API call failed after multiple retries:", error);
+                        return isTTS ? { error: "Failed to fetch TTS audio." } : "An error occurred while contacting the analysis engine. Please try again.";
                     }
                 }
             }
-            return "Failed to get a response from the analysis engine.";
+            return isTTS ? { error: "Failed to get TTS response." } : "Failed to get a response from the analysis engine.";
         }
 
+        // --- TTS Helpers ---
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcm16, sampleRate) {
+            const numChannels = 1;
+            const bitDepth = 16;
+            const blockAlign = numChannels * (bitDepth / 8);
+            const byteRate = sampleRate * blockAlign;
+
+            const wavBufferSize = 44 + pcm16.length * 2;
+            const wavBuffer = new ArrayBuffer(wavBufferSize);
+            const view = new DataView(wavBuffer);
+            let offset = 0;
+
+            writeString(view, offset, 'RIFF'); offset += 4;
+            view.setUint32(offset, wavBufferSize - 8, true); offset += 4;
+            writeString(view, offset, 'WAVE'); offset += 4;
+
+            writeString(view, offset, 'fmt '); offset += 4;
+            view.setUint32(offset, 16, true); offset += 4;
+            view.setUint16(offset, 1, true); offset += 2;
+            view.setUint16(offset, numChannels, true); offset += 2;
+            view.setUint32(offset, sampleRate, true); offset += 4;
+            view.setUint32(offset, byteRate, true); offset += 4;
+            view.setUint16(offset, blockAlign, true); offset += 2;
+            view.setUint16(offset, bitDepth, true); offset += 2;
+
+            writeString(view, offset, 'data'); offset += 4;
+            view.setUint32(offset, pcm16.length * 2, true); offset += 4;
+
+            for (let i = 0; i < pcm16.length; i++) {
+                view.setInt16(offset, pcm16[i], true);
+                offset += 2;
+            }
+
+            return new Blob([wavBuffer], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        window.speakRecommendation = async function () {
+            const ttsBtn = document.getElementById('tts-btn');
+            const outputElement = document.getElementById('recommendation-output');
+            const textToSpeak = outputElement.textContent;
+
+            if (textToSpeak.includes('Click the button above') || textToSpeak.includes('An error occurred') || ttsBtn.disabled) {
+                showNotification('tts_error');
+                console.error("TTS failed: No valid recommendation text found or button is disabled.");
+                return;
+            }
+
+            const ttsSpan = ttsBtn.querySelector('span');
+            const originalButtonText = ttsSpan ? ttsSpan.textContent : t('tts_listen');
+
+            if (ttsSpan) ttsSpan.textContent = t('tts_speaking');
+            ttsBtn.disabled = true;
+
+            try {
+                const ttsQuery = `Say cheerfully: Attention manager. Automated Alert. ${textToSpeak}`;
+                const ttsResult = await geminiApiCall(null, ttsQuery, "", 3, true);
+
+                if (ttsResult.audioData && ttsResult.mimeType) {
+                    const mimeMatch = ttsResult.mimeType.match(/rate=(\d+)/);
+                    const sampleRate = mimeMatch ? parseInt(mimeMatch[1], 10) : 16000;
+
+                    const pcmData = base64ToArrayBuffer(ttsResult.audioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+
+                    audio.onended = () => {
+                        if (ttsSpan) ttsSpan.textContent = originalButtonText;
+                        ttsBtn.disabled = false;
+                        URL.revokeObjectURL(audioUrl);
+                    };
+
+                    audio.onerror = (e) => {
+                        console.error("Audio playback error:", e);
+                        showNotification('tts_error');
+                        if (ttsSpan) ttsSpan.textContent = originalButtonText;
+                        ttsBtn.disabled = false;
+                        URL.revokeObjectURL(audioUrl);
+                    };
+
+                } else {
+                    showNotification('tts_error');
+                    console.error("TTS API returned no audio data.");
+                    if (ttsSpan) ttsSpan.textContent = originalButtonText;
+                    ttsBtn.disabled = false;
+                }
+            } catch (e) {
+                console.error("Error during TTS process:", e);
+                showNotification('tts_error');
+                if (ttsSpan) ttsSpan.textContent = originalButtonText;
+                ttsBtn.disabled = false;
+            }
+        }
 
         // --- Dashboard Logic and Mock Data ---
-
-        // Ideal Range Definitions (used for color-coding)
         const RANGES = {
-            temp: { ideal: [5, 15], warning: [0, 5, 15, 20], unit: '°C' }, // Ideal 5-15°C
-            humid: { ideal: [65, 75], warning: [55, 65, 75, 85], unit: '%' }, // Ideal 65-75%
-            airq: { ideal: [300, 800], warning: [800, 1200], unit: 'PPM' } // Ideal <800 PPM
+            temp: { ideal: [5, 15], warning: [0, 5, 15, 20], unit: '°C' },
+            humid: { ideal: [65, 75], warning: [55, 65, 75, 85], unit: '%' },
+            airq: { ideal: [300, 800], warning: [800, 1200], unit: 'PPM' }
         };
 
-        // Mock historical data (20 points for 20 hours/readings)
         let mockData = {
             labels: Array.from({ length: 20 }, (_, i) => `${i + 1}h ago`),
             temp: Array.from({ length: 20 }, () => Math.floor(Math.random() * 25) + 5),
             humid: Array.from({ length: 20 }, () => Math.floor(Math.random() * 40) + 50),
             airq: Array.from({ length: 20 }, () => Math.floor(Math.random() * 1500) + 100)
         };
-        
-        // Get the most recent value for the status tiles
+
         function getCurrentValue(type) {
             return mockData[type][mockData.labels.length - 1];
         }
@@ -432,14 +694,12 @@
             let statusTextKey = 'status_ideal_stable';
             let color = '#10B981';
 
-            // Check for Critical (Red)
             if (type === 'airq') {
                 if (value > range.warning[1]) { status = 'CRITICAL'; statusTextKey = 'status_high_contamination'; color = '#EF4444'; }
             } else {
                 if (value < range.warning[0] || value > range.warning[3]) { status = 'CRITICAL'; statusTextKey = 'status_extreme_condition'; color = '#EF4444'; }
             }
 
-            // Check for Warning (Yellow)
             if (status !== 'CRITICAL') {
                 if (type === 'airq') {
                     if (value > range.ideal[1]) { status = 'WARNING'; statusTextKey = 'status_elevated_levels'; color = '#FBBF24'; }
@@ -447,103 +707,107 @@
                     if (value < range.warning[1] || value > range.warning[2]) { status = 'WARNING'; statusTextKey = 'status_near_limit'; color = '#FBBF24'; }
                 }
             }
-            
+
             return { status, text: t(statusTextKey), color };
         }
 
-        // Function to update the status tiles and overall status
-        // Pass a boolean to decide if we should update actuator status text (which only needs to happen on translation)
         function updateStatusTiles(runActuatorTranslation = true) {
             let overallStatus = 'ideal';
             const currentConditions = {};
+            const ttsBtn = document.getElementById('tts-btn');
 
             ['temp', 'humid', 'airq'].forEach(type => {
                 const value = getCurrentValue(type);
                 const status = getStatus(type, value);
-                
+
                 currentConditions[type] = { value, status: status.status, unit: RANGES[type].unit };
 
-                // 1. Update Card Value (Value remains non-translated)
-                document.getElementById(`${type}-value`).textContent = `${value} ${RANGES[type].unit}`;
+                const valueElement = document.getElementById(`${type}-value`);
+                if (valueElement) valueElement.textContent = `${value} ${RANGES[type].unit}`;
 
-                // 2. Update Card Alert Text and Color
                 const card = document.getElementById(`${type}-card`);
                 const alertText = document.getElementById(`${type}-alert`);
-                
-                // Reset card classes
-                card.className = 'status-card p-4 rounded-xl shadow-inner transition duration-300 mb-4';
-                alertText.className = 'text-sm font-medium transition-all text-right';
 
-                // Apply status color and text
-                if (status.status === 'CRITICAL') {
-                    card.classList.add('bg-alert-red/10', 'ring-4', 'ring-alert-red', 'ring-opacity-50');
-                    alertText.classList.add('text-alert-red', 'font-bold');
-                    overallStatus = 'critical';
-                } else if (status.status === 'WARNING') {
-                    card.classList.add('bg-warning-yellow/10', 'ring-4', 'ring-warning-yellow', 'ring-opacity-50');
-                    alertText.classList.add('text-warning-yellow');
-                    if (overallStatus !== 'critical') overallStatus = 'warning';
-                } else {
-                    card.classList.add('bg-ideal-green/10', 'ring-4', 'ring-ideal-green', 'ring-opacity-50');
-                    alertText.classList.add('text-ideal-green');
+                if (card && alertText) {
+                    card.className = 'status-card p-4 rounded-xl shadow-inner transition duration-300';
+                    alertText.className = 'text-sm font-medium transition-all text-right';
+
+                    if (status.status === 'CRITICAL') {
+                        card.classList.add('bg-alert-red/10', 'ring-4', 'ring-alert-red', 'ring-opacity-50');
+                        alertText.classList.add('text-alert-red', 'font-bold');
+                        overallStatus = 'critical';
+                    } else if (status.status === 'WARNING') {
+                        card.classList.add('bg-warning-yellow/10', 'ring-4', 'ring-warning-yellow', 'ring-opacity-50');
+                        alertText.classList.add('text-warning-yellow');
+                        if (overallStatus !== 'critical') overallStatus = 'warning';
+                    } else {
+                        card.classList.add('bg-ideal-green/10', 'ring-4', 'ring-ideal-green', 'ring-opacity-50');
+                        alertText.classList.add('text-ideal-green');
+                    }
+
+                    alertText.textContent = status.text;
                 }
-                
-                alertText.textContent = status.text;
             });
 
-            // Update Actuator Status Text Spans only on translation or initial load
-            if (runActuatorTranslation) {
-                const fanStatus = document.getElementById('fan-status');
-                fanStatus.textContent = fanStatus.textContent === 'OFF' ? t('status_off') : t('status_active');
-                
-                const climateStatus = document.getElementById('climate-status');
-                climateStatus.textContent = climateStatus.textContent.startsWith('Idle') || climateStatus.textContent.includes(t('status_idle')) ? t('status_idle') : t('status_cooling');
-                
-                const sprinklerStatus = document.getElementById('sprinkler-status');
-                sprinklerStatus.textContent = sprinklerStatus.textContent === 'OFF' ? t('status_off') : t('status_spraying');
+            if (ttsBtn) {
+                if (overallStatus === 'critical' || overallStatus === 'warning') {
+                    ttsBtn.disabled = false;
+                } else {
+                    ttsBtn.disabled = true;
+                }
             }
 
+            if (runActuatorTranslation) {
+                const fanStatus = document.getElementById('fan-status');
+                if (fanStatus) fanStatus.textContent = fanStatus.textContent === 'OFF' ? t('status_off') : t('status_active');
 
-            // Update Overall Status Bar
+                const climateStatus = document.getElementById('climate-status');
+                if (climateStatus) climateStatus.textContent = climateStatus.textContent.startsWith('Idle') || climateStatus.textContent.includes(t('status_idle')) ? t('status_idle') : t('status_cooling');
+
+                const sprinklerStatus = document.getElementById('sprinkler-status');
+                if (sprinklerStatus) sprinklerStatus.textContent = sprinklerStatus.textContent === 'OFF' ? t('status_off') : t('status_spraying');
+            }
+
             const dot = document.getElementById('status-dot');
             const text = document.getElementById('status-text');
             const bar = document.getElementById('overall-status-bar');
 
-            bar.className = 'flex items-center p-2 rounded-full text-xs font-semibold';
-            dot.className = 'w-2 h-2 rounded-full mr-2';
+            if (bar && dot && text) {
+                bar.className = 'flex items-center p-2 rounded-full text-xs font-semibold';
+                dot.className = 'w-2 h-2 rounded-full mr-2';
 
-            if (overallStatus === 'critical') {
-                bar.classList.add('bg-alert-red/20', 'text-alert-red');
-                dot.classList.add('bg-alert-red');
-                text.textContent = t('status_critical');
-            } else if (overallStatus === 'warning') {
-                bar.classList.add('bg-warning-yellow/20', 'text-warning-yellow');
-                dot.classList.add('bg-warning-yellow');
-                text.textContent = t('status_warning');
-            } else {
-                bar.classList.add('bg-ideal-green/20', 'text-ideal-green');
-                dot.classList.add('bg-ideal-green');
-                text.textContent = t('status_operational');
+                if (overallStatus === 'critical') {
+                    bar.classList.add('bg-alert-red/20', 'text-alert-red');
+                    dot.classList.add('bg-alert-red');
+                    text.textContent = t('status_critical');
+                } else if (overallStatus === 'warning') {
+                    bar.classList.add('bg-warning-yellow/20', 'text-warning-yellow');
+                    dot.classList.add('bg-warning-yellow');
+                    text.textContent = t('status_warning');
+                } else {
+                    bar.classList.add('bg-ideal-green/20', 'text-ideal-green');
+                    dot.classList.add('bg-ideal-green');
+                    text.textContent = t('status_operational');
+                }
             }
-            
-            return currentConditions; // Return conditions for LLM use
+
+            return currentConditions;
         }
 
         let charts = {};
 
         function createChart(type, canvasId) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+
             const currentValue = getCurrentValue(type);
             const status = getStatus(type, currentValue);
-            const label = t(`${type}_label`); // Use a placeholder key since chart labels are complex
 
-            // Define min/max for y-axis scaling
             let minVal, maxVal;
             if (type === 'temp') { minVal = 0; maxVal = 30; }
             else if (type === 'humid') { minVal = 40; maxVal = 100; }
             else { minVal = 0; maxVal = 2000; }
 
-            // Check if the chart already exists, destroy it before creating a new one
             if (charts[type]) {
                 charts[type].destroy();
             }
@@ -553,11 +817,10 @@
                 data: {
                     labels: mockData.labels,
                     datasets: [{
-                        // Keep label in English for simpler Chart.js config, but translate legend if needed (legend is hidden here)
-                        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Trend`, 
+                        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Trend`,
                         data: mockData[type],
                         borderColor: status.color,
-                        backgroundColor: status.color.replace(')', ', 0.1)'), // Light fill
+                        backgroundColor: status.color.replace(')', ', 0.1)'),
                         borderWidth: 2,
                         pointRadius: 3,
                         pointBackgroundColor: status.color,
@@ -592,8 +855,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
-                                    // Tooltip labels remain numeric with units
+                                label: function (context) {
                                     return `${context.dataset.label}: ${context.parsed.y} ${RANGES[type].unit}`;
                                 }
                             }
@@ -605,34 +867,27 @@
         }
 
         function updateCharts() {
-            // Recreate/update charts (createChart now handles destruction internally)
             createChart('temp', 'tempChart');
             createChart('humid', 'humidChart');
             createChart('airq', 'airqChart');
         }
 
-        // --- GEMINI LLM Feature Logic ---
-        window.getRecommendation = async function() {
+        // --- GEMINI: Recommendation ---
+        window.getRecommendation = async function () {
             const outputElement = document.getElementById('recommendation-output');
             const loadingIndicator = document.getElementById('loading-indicator');
             const recommendationBtn = document.getElementById('recommendation-btn');
+            const ttsBtn = document.getElementById('tts-btn');
 
-            // 1. Gather current data
-            const conditions = updateStatusTiles(false); // Runs status check and returns data
-            const temp = conditions.temp;
-            const humid = conditions.humid;
-            const airq = conditions.airq;
-            
+            const conditions = updateStatusTiles(false);
             const conditionString = `
-                Temperature: ${temp.value}${temp.unit} (Status: ${temp.status})
-                Humidity: ${humid.value}${humid.unit} (Status: ${humid.status})
-                Air Quality: ${airq.value}${airq.unit} (Status: ${airq.status})
+                Temperature: ${conditions.temp.value}${conditions.temp.unit} (Status: ${conditions.temp.status})
+                Humidity: ${conditions.humid.value}${conditions.humid.unit} (Status: ${conditions.humid.status})
+                Air Quality: ${conditions.airq.value}${conditions.airq.unit} (Status: ${conditions.airq.status})
                 The ideal onion storage conditions are: Temp 5-15°C, Humidity 65-75%, Air Quality <800 PPM.
             `.trim();
 
-            // Note: The system prompt specifies the "Sprinkler System"
-            // The prompt and system instruction MUST remain in English for the API call.
-            const systemPrompt = "You are an expert Agricultural IOT System Analyst focused on long-term onion storage preservation. Your goal is to provide a concise, professional, and actionable 3-step plan to stabilize the warehouse environment using the ventilation fan, climate control unit, and **sprinkler system**. Use bullet points for the plan. Do not include any introductory or concluding remarks, only the analysis and the 3-step plan.";
+            const systemPrompt = "You are an expert Agricultural IOT System Analyst focused on long-term onion storage preservation. Your goal is to provide a concise, professional, and actionable 3-step plan to stabilize the warehouse environment using the ventilation fan, climate control unit, and sprinkler system. The format MUST be: Risk Assessment (Low/Moderate/High):\n[1-2 sentence assessment]\n\n3-Step Action Plan:\n* [Action 1]\n* [Action 2]\n* [Action 3]. Do not include any other introductory or concluding remarks.";
 
             const userQuery = `Analyze the following current environmental conditions in the onion storage warehouse and provide a risk assessment and a 3-step action plan for the available actuators (Ventilation Fan, Climate Control Unit, Sprinkler System).
 
@@ -640,70 +895,114 @@
             ${conditionString}
             `;
 
-            // 2. Show loading state
-            recommendationBtn.disabled = true;
-            recommendationBtn.textContent = t('recommendation_btn_analyzing');
-            loadingIndicator.classList.remove('hidden');
-            document.querySelector('#loading-indicator span').textContent = t('loading_text');
-            outputElement.innerHTML = `<p class="text-center text-gray-500">${t('running_simulation')}</p>`;
-            
-            // 3. Call the API
-            const resultText = await geminiApiCall(userQuery, systemPrompt);
+            if (recommendationBtn) recommendationBtn.disabled = true;
+            if (ttsBtn) ttsBtn.disabled = true;
+            if (recommendationBtn) recommendationBtn.textContent = t('recommendation_btn_analyzing');
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            const loadingSpan = document.querySelector('#loading-indicator span');
+            if (loadingSpan) loadingSpan.textContent = t('loading_text');
+            if (outputElement) outputElement.innerHTML = `<p class="text-center text-gray-500">${t('running_simulation')}</p>`;
 
-            // 4. Update UI
-            loadingIndicator.classList.add('hidden');
-            recommendationBtn.disabled = false;
-            recommendationBtn.textContent = t('recommendation_btn_analyze');
-            
-            // Output text is left as-is (API response is in English, or whatever language it determines is best)
+            const resultText = await geminiApiCall(API_MODEL, userQuery, systemPrompt);
+
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            if (recommendationBtn) recommendationBtn.disabled = false;
+            if (recommendationBtn) recommendationBtn.textContent = t('recommendation_btn_analyze');
+
+            if (outputElement) outputElement.textContent = resultText;
+
+            if (ttsBtn && typeof resultText === 'string' && !resultText.toLowerCase().includes('risk assessment: low')) {
+                ttsBtn.disabled = false;
+            }
+        };
+
+        // --- GEMINI: Simulator ---
+        window.runConditionSimulation = async function () {
+            const inputElement = document.getElementById('simulation-input');
+            const outputElement = document.getElementById('simulation-output');
+            const loadingIndicator = document.getElementById('simulator-loading');
+            const simulatorBtn = document.getElementById('simulator-btn');
+
+            if (!inputElement || !outputElement || !simulatorBtn) return;
+
+            const scenario = inputElement.value.trim();
+
+            if (!scenario) {
+                inputElement.placeholder = "Please enter a scenario to simulate!";
+                inputElement.focus();
+                return;
+            }
+
+            const currentConditions = updateStatusTiles(false);
+            const currentConditionString = `
+                Current Temperature: ${currentConditions.temp.value}${currentConditions.temp.unit}
+                Current Humidity: ${currentConditions.humid.value}${currentConditions.humid.unit}
+                Current Air Quality: ${currentConditions.airq.value}${currentConditions.airq.unit}
+                Ideal Onion Storage Range: Temp 5-15°C, Humidity 65-75%, Air Quality <800 PPM.
+            `.trim();
+
+            const systemPrompt = "You are a predictive analyst for onion storage. The user will provide a set of hypothetical environmental conditions (the 'Scenario'). Your task is to analyze the potential long-term impact of these conditions on the stored onion crop (e.g., risk of sprouting, rot, or dehydration). Provide an Assessment, a Detailed Forecast, and Pre-emptive Action Plan. Use the following strict format:\n\nScenario Assessment:\n[1-2 sentence summary of the scenario]\n\nForecasted Damage Risk (Low/Moderate/High):\n[1-2 sentences on the specific damage type]\n\nPre-emptive Action Plan:\n* [Action for Ventilation Fan]\n* [Action for Climate Control Unit]\n* [Action for Sprinkler System]. Do not include any other text.";
+
+            const userQuery = `Current Conditions:\n${currentConditionString}\n\nScenario to Simulate:\n${scenario}`;
+
+            simulatorBtn.disabled = true;
+            simulatorBtn.textContent = t('simulator_btn_simulating');
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            const loadingSpan = document.querySelector('#simulator-loading span');
+            if (loadingSpan) loadingSpan.textContent = t('loading_text_simulator');
+            outputElement.innerHTML = `<p class="text-center text-gray-500">${t('running_simulation')}</p>`;
+
+            const resultText = await geminiApiCall(API_MODEL, userQuery, systemPrompt);
+
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
+            simulatorBtn.disabled = false;
+            simulatorBtn.textContent = t('simulator_btn_run');
             outputElement.textContent = resultText;
         };
 
-
         // Mock actuator control
-        window.toggleActuator = function(actuatorId, statusId, button) {
+        window.toggleActuator = function (actuatorId, statusId, button) {
             const statusElement = document.getElementById(statusId);
             let messageKey;
-            
-            if (actuatorId === 'fan' || actuatorId === 'sprinkler') { 
+
+            if (actuatorId === 'fan' || actuatorId === 'sprinkler') {
                 if (button.textContent === t('button_on')) {
                     // Turn ON
                     button.textContent = t('button_off');
                     button.classList.remove('bg-primary-orange', 'hover:bg-orange-600');
                     button.classList.add('bg-gray-400', 'hover:bg-gray-500');
-                    statusElement.textContent = actuatorId === 'sprinkler' ? t('status_spraying') : t('status_active');
+                    if (statusElement) statusElement.textContent = actuatorId === 'sprinkler' ? t('status_spraying') : t('status_active');
                     messageKey = actuatorId === 'sprinkler' ? 'msg_sprinkler_on' : 'msg_fan_on';
                 } else {
                     // Turn OFF
                     button.textContent = t('button_on');
                     button.classList.remove('bg-gray-400', 'hover:bg-gray-500');
                     button.classList.add('bg-primary-orange', 'hover:bg-orange-600');
-                    statusElement.textContent = t('status_off');
+                    if (statusElement) statusElement.textContent = t('status_off');
                     messageKey = actuatorId === 'sprinkler' ? 'msg_sprinkler_off' : 'msg_fan_off';
                 }
             } else if (actuatorId === 'climate') {
-                 if (button.textContent === t('button_activate')) {
+                if (button.textContent === t('button_activate')) {
                     // Activate
                     button.textContent = t('button_shutdown');
                     button.classList.remove('bg-primary-orange', 'hover:bg-orange-600');
                     button.classList.add('bg-red-500', 'hover:bg-red-600');
-                    statusElement.textContent = t('status_cooling');
+                    if (statusElement) statusElement.textContent = t('status_cooling');
                     messageKey = 'msg_climate_on';
                 } else {
                     // Shutdown
                     button.textContent = t('button_activate');
                     button.classList.remove('bg-red-500', 'hover:bg-red-600');
                     button.classList.add('bg-primary-orange', 'hover:bg-orange-600');
-                    statusElement.textContent = t('status_idle');
+                    if (statusElement) statusElement.textContent = t('status_idle');
                     messageKey = 'msg_climate_off';
                 }
             }
 
-            // Simple notification modal (uses translated message)
             showNotification(messageKey);
         };
 
-        // Simple Notification/Alert Message Box
+        // Notification box
         function showNotification(messageKey) {
             let notification = document.getElementById('notification-box');
             if (!notification) {
@@ -712,37 +1011,32 @@
                 notification.className = 'fixed bottom-4 right-4 bg-gray-800 text-white p-3 rounded-lg shadow-xl transition-opacity duration-300 opacity-0';
                 document.body.appendChild(notification);
             }
-            // Use translation function for the message
             notification.textContent = t(messageKey);
             notification.classList.remove('opacity-0');
             notification.classList.add('opacity-100');
-            
+
             setTimeout(() => {
                 notification.classList.remove('opacity-100');
                 notification.classList.add('opacity-0');
             }, 3000);
         }
 
-        // Simulation loop to generate new random data and update the UI
+        // Simulation loop to update mock data
         function simulateDataUpdate() {
-            // Remove the oldest data point
             mockData.temp.shift();
             mockData.humid.shift();
             mockData.airq.shift();
-            
-            // Add a new, slightly random data point
+
             const lastTemp = mockData.temp[mockData.temp.length - 1];
-            // Introduce a bias to sometimes push values into "WARNING" or "CRITICAL" for testing
             const randomFactor = Math.random();
             let newTemp;
-            if (randomFactor < 0.2) { // 20% chance of a high spike
+            if (randomFactor < 0.2) {
                 newTemp = Math.min(30, lastTemp + (Math.random() * 8 + 1));
             } else {
                 newTemp = Math.min(30, Math.max(0, lastTemp + (Math.random() * 6 - 3)));
             }
-
             mockData.temp.push(Math.round(newTemp));
-            
+
             const lastHumid = mockData.humid[mockData.humid.length - 1];
             const newHumid = Math.min(100, Math.max(40, lastHumid + (Math.random() * 10 - 5)));
             mockData.humid.push(Math.round(newHumid));
@@ -751,27 +1045,22 @@
             const newAirQ = Math.min(2000, Math.max(100, lastAirQ + (Math.random() * 200 - 100)));
             mockData.airq.push(Math.round(newAirQ));
 
-            // Shift the labels to represent a rolling window
             mockData.labels.shift();
             mockData.labels.push('Now');
 
-            // Only update tiles with status text, do not force actuator translation on every simulation cycle
-            updateStatusTiles(false); 
+            updateStatusTiles(false);
             updateCharts();
         }
 
         function startDashboard() {
-            // Initial render
-            updateStatusTiles(true); // Initial update, run actuator translation
+            updateStatusTiles(true);
             updateCharts();
-
-            // Start simulation to update data every 5 seconds
-            setInterval(simulateDataUpdate, 5000); 
+            setInterval(simulateDataUpdate, 5000);
         }
 
-        // Start the application after the window loads and mock Firebase auth is handled
         window.onload = initializeAppAndAuth;
 
     </script>
 </body>
+
 </html>
